@@ -26,7 +26,6 @@ function shareCart(callback) {
             me = user;
         callback(null, 'success');
         });
-
     }
 
 
@@ -37,7 +36,9 @@ var actions = {
         sendMsg(event);
     },
     updateUsers: function (data) {
+        console.log("updateUsers",data);
         if (_.get(data, 'users')) {
+            console.log("data.users",data.users);
             users = data.users;
             renderUsers(users);
         }
