@@ -28,7 +28,6 @@
     display: flex;
 }
 
-
 .content .menu .share {
     margin-bottom: 10px;
     border: 1px solid #980000;
@@ -39,6 +38,12 @@
     width: 160px;
     padding: 0;
     margin-top: 10px;
+}
+
+.content .menu .share.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+    cursor: default;
 }
 
 .content .menu .reset {
@@ -53,10 +58,17 @@
     margin-top: 10px;
 }
 
-.content .users{
+.content .users {
     width: 100%;
     margin-top: 10px;
 }
+
+.content .users.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+    cursor: default;
+}
+
 .content .users .user {
     color: #fff;
     display: flex;
@@ -64,6 +76,15 @@
     justify-content: flex-start;
     position: relative;
     padding: 10px;
+}
+
+.content .users .user.host {
+    color: #000;
+    font-weight: bold;
+}
+
+.content .users .user.host .join {
+    display: none;
 }
 
 .content .users .user:not(:first-child) {
