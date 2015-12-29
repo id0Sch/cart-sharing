@@ -108,7 +108,7 @@ function markUser(user) {
  * runs in scope of web-page , sends message to background.js
  */
 function listenOnChanges(fn) {
-    var scriptContent = 'var resName = $("div[data-restaurant-details-main-div]").data().resName;var cartId="' + me.cart + '";var extId="' + chrome.runtime.id + '";$(document).bind("MenuDishesChanged QuantityChanged MealDealRemoved DishRemoved TipUpdated DiscounCouponAdded AddressSelected DeliveryMethodChanged", ' + fn + ')';
+    var scriptContent = 'var cartId="' + me.cart + '";var extId="' + chrome.runtime.id + '";$(document).bind("MenuDishesChanged QuantityChanged MealDealRemoved DishRemoved TipUpdated DiscounCouponAdded AddressSelected DeliveryMethodChanged", ' + fn + ')';
     var script = document.createElement('script');
     script.id = 'tmpScript';
     script.appendChild(document.createTextNode(scriptContent));
@@ -126,6 +126,12 @@ function listenOnOrderConfirm(fn) {
 }
 
 function onChange() {
+    var resName;
+    var restData = $("div[data-restaurant-details-main-div]").data();
+    
+    if (restData.resName) {
+        resName = restData.resName;
+    }
     chrome.runtime.sendMessage(extId, {fn: 'updatePeers', event: 'update', cart: cartId, resName: resName});
 }
 
