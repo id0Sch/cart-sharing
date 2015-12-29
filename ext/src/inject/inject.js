@@ -6,10 +6,10 @@ function sendMsg(msg, callback) {
 function getCartId(callback) {
     sendMsg({fn: 'getCartId'}, callback);
 }
-function joinToCart(cart) {
-    sendMsg({fn: 'join', guid: cart}, function () {
-        console.log('got new cart', cart);
-        me.cart = cart;
+function joinToCart(user) {
+    sendMsg({fn: 'join', me: me, user: user}, function () {
+        console.log('got new cart', user.cart);
+        me.cart = user.cart;
         callPageFunction('_ShoppingCart.ReloadShoppingCart');
     });
 }
@@ -164,7 +164,7 @@ function share() {
 function join(user) {
     //to do - validate uuid
     if (user.cart) {
-        joinToCart(user.cart);
+        joinToCart(user);
         //refresh the delivery ui
         if (location.pathname.indexOf("/Restaurants/Menu/Delivery/") === -1) {
             //not restaurant page

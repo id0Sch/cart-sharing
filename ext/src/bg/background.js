@@ -69,16 +69,16 @@ var cart = {
         socket.emit('update-peers', data);
     },
     share: function (data, callback) {
-            socket.emit('peer-joined', data.user);
-            callback(null, data.user);
+        socket.emit('peer-shared', data.user);
+        callback(null, data.user);
     },
     join: function joinCart(data, callback) {
-        var guid = data.guid;
+        socket.emit('peer-joined', {user: data.me, host: data.user});
         chrome.cookies.get({
             url: "https://www.10bis.co.il/*",
             name: "WebApplication.Context"
         }, function (a) {
-            var value = a.value.replace(/ShoppingCartGuid=([^&]*)/, 'ShoppingCartGuid=' + guid);
+            var value = a.value.replace(/ShoppingCartGuid=([^&]*)/, 'ShoppingCartGuid=' + data.user.cart);
             chrome.cookies.set({
                 url: 'https://www.10bis.co.il',
                 name: "WebApplication.Context",

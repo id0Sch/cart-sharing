@@ -27,12 +27,23 @@ io.on('connection', function (socket) {
 
     updateUsers();
 
-    socket.on('peer-joined', function (data) {
+    socket.on('peer-shared', function (data) {
         users[data.mail] = data;
         console.log(util.format('%s - %s', data.mail, data.cart));
         updateUsers();
     });
 
+    socket.emit('peer-joined', function (data) {
+        var host = users[data.host.mail];
+        if (host) {
+            if (!host.peers) {
+                host.peers = [];
+
+            }
+            host.peers.push(data.user);
+        }
+        updateUsers();
+    });
     socket.on('peer-reset', function (data) {
         var user = users[data.user.mail];
         if (user) {
