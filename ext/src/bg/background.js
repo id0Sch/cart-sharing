@@ -1,7 +1,8 @@
 'use strict';
+var settings = new Store("settings");
+console.log('connecting to ', settings.get('server'));
 
-console.log('connecting to ', config.server);
-var socket = io(config.server);
+var socket = io(settings.get('server'));
 var users = {};
 
 var port = chrome.runtime.connect({name: "back-inject"});

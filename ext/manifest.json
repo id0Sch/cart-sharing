@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "manifest_version": 2,
   "description": "This extension allows you to share your cart with friends",
-  "homepage_url": "http://extensionizr.com",
+  "homepage_url": "https://10bis.co.il",
   "icons": {
     "16": "icons/icon16.png",
     "48": "icons/icon48.png",
@@ -12,9 +12,9 @@
   "default_locale": "en",
   "background": {
     "scripts": [
-      "/config.js",
       "js/socket.io.js",
       "js/lodash.min.js",
+      "/js/store.js",
       "src/bg/background.js"
     ],
     "persistent": true
@@ -25,7 +25,9 @@
     "<all_urls>"
   ],
   "externally_connectable": {
-    "matches": ["https://www.10bis.co.il/*"]
+    "matches": [
+      "https://www.10bis.co.il/*"
+    ]
   },
   "content_scripts": [
     {
@@ -37,13 +39,13 @@
         "js/lodash.min.js",
         "src/inject/inject.js"
       ],
-      "css":
-      [
+      "css": [
         "src/inject/inject.css"
       ]
     }
-  ]
-, "web_accessible_resources": [
-  "src/inject/inject.css"
-]
+  ],
+  "web_accessible_resources": [
+    "src/inject/inject.css"
+  ],
+  "options_page": "src/options_custom/index.html"
 }
