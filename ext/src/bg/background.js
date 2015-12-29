@@ -40,6 +40,7 @@ function getCart(callback) {
         name: "WebApplication.Context"
     }, function (a) {
         if (a && a.hasOwnProperty('value')) {
+            console.log(a);
             callback(null, a.value.match(/ShoppingCartGuid=([^&]*)/)[1]);
         } else {
             console.error('could not retrieve cookie', a);

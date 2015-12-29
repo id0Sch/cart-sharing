@@ -6,6 +6,7 @@ var express = require('express');
 var util = require('util');
 var app = express();
 var server = require('http').Server(app);
+var _ = require('lodash');
 
 server.listen(3001, function () {
     console.log('server up and running');
@@ -55,6 +56,11 @@ io.on('connection', function (socket) {
     });
 
     socket.on('update-peers', function (data) {
+        var user = _.find(users, {cart: data.cart});
+        if (data.resName && user && !user.rest) {
+            user.rest = data.resName;
+            updateUsers();
+        }
         socket.broadcast.emit('update-peers', data);
     });
     socket.on('peer-joined-order', function (data) {
