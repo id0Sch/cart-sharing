@@ -66,8 +66,8 @@ var cart = {
             socket.emit('peer-joined', data.user);
             callback(null, data.user);
     },
-    join: function joinCart(body, callback) {
-        var guid = body.guid;
+    join: function joinCart(data, callback) {
+        var guid = data.guid;
         chrome.cookies.get({
             url: "https://www.10bis.co.il/*",
             name: "WebApplication.Context"
@@ -78,6 +78,30 @@ var cart = {
                 name: "WebApplication.Context",
                 value: value
             }, callback);
+        });
+    },
+    reset: function (data, callback) {
+        socket.emit('peer-reset', {user: data.user});
+        chrome.cookies.get({
+            url: "https://www.10bis.co.il/*",
+            name: "WebApplication.Context"
+        }, function (a) {
+            chrome.cookies.set({
+                url: 'https://www.10bis.co.il',
+                name: "WebApplication.Context",
+                value: ""
+            }, function (cookie) {
+                console.log('cookie replaced', cookie);
+
+                chrome.tabs.query({
+                    url: 'https://www.10bis.co.il/*'
+                }, function (tabs) {
+                    tabs.forEach(function (tab) {
+                        chrome.tabs.reload(tab.id, function () {
+                        });
+                    });
+                });
+            });
         });
     }
 };

@@ -34,6 +34,14 @@ io.on('connection', function (socket) {
         updateUsers();
     });
 
+    socket.on('peer-reset', function (data) {
+        var user = users[data.user.mail];
+        if (user) {
+            delete users[data.user.mail];
+        }
+        updateUsers();
+    });
+
     socket.on('update-peers', function (data) {
         socket.broadcast.emit('update-peers', data);
     });

@@ -24,7 +24,9 @@ function shareCart(callback) {
         callback(null, 'success');
     });
 }
-
+function reset(callback) {
+    sendMsg({fn: 'reset', user: me});
+}
 
 // updates cart
 var actions = {
@@ -150,6 +152,7 @@ function injectMenu() {
     createElement('div', 'x', document.getElementsByClassName('menu')[0], closeMenu, 'close');
     createElement('div', '', document.getElementsByClassName('menu')[0], null, 'users');
     createElement('button', 'share', document.getElementsByClassName('menu')[0], share, 'share');
+    createElement('button', 'reset', document.getElementsByClassName('menu')[0], reset, 'reset');
     createElement('div', 'Cart sharing menu', document.getElementsByClassName('content')[0], openMenu, 'handle');
 
 
@@ -181,7 +184,7 @@ function share() {
 function disableForm() {
     //disable join users
     $(".users").removeClass('disabled').addClass('disabled');
-    //disable join users
+    //disable share button
     $(".share").removeClass('disabled').addClass('disabled');
 }
 
@@ -191,6 +194,7 @@ function join(user) {
         joinToCart(user.cart);
         //disable share button
         disableForm();
+        markUser(user);
 
         //refresh the delivery ui
         if (location.pathname.indexOf("/Restaurants/Menu/Delivery/") === -1) {
