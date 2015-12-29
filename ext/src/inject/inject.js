@@ -6,7 +6,7 @@ function getCartId(callback) {
 function joinToCart(cart) {
     chrome.extension.sendMessage({fn: 'join', guid: cart}, function () {
         console.log('got new cart', cart);
-        triggerEvent('MenuDishesChanged');
+        callPageFunction('_ShoppingCart.ReloadShoppingCart');
     });
 }
 function getFriendsList() {
@@ -57,8 +57,8 @@ var actions = {
 };
 
 
-function triggerEvent(name) {
-    var scriptContent = "$(document).trigger('" + name + "');";
+function callPageFunction(name) {
+    var scriptContent = name + "();";
     var script = document.createElement('script');
     script.id = 'tmpScript';
     script.appendChild(document.createTextNode(scriptContent));
