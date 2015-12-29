@@ -124,11 +124,11 @@ function listenOnOrderConfirm(fn) {
 }
 
 function onChange() {
-    var restData = $("div[data-restaurant-details-main-div]").data();
     var resName;
-
+    var restData = $("div[data-restaurant-details-main-div]").data();
+    console.log(restData);
     if (restData.resName) {
-        resName = resName;
+        resName = restData.resName;
     }
     chrome.runtime.sendMessage(extId, {fn: 'updatePeers', event: 'update', cart: cartId, resName: resName});
 }
