@@ -126,7 +126,7 @@ function listenOnOrderConfirm(fn) {
 function onChange() {
     var resName;
     var restData = $("div[data-restaurant-details-main-div]").data();
-    console.log(restData);
+    
     if (restData.resName) {
         resName = restData.resName;
     }
