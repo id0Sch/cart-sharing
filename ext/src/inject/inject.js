@@ -66,14 +66,13 @@ function renderUsers(users) {
 
         } else {
             //me
-            if (_.size(_.result(users[key], 'peers'))) {
-                createElement('div', text + " (+" + users[key].peers.length + ")", document.getElementsByClassName(users[key].cart)[0], togglePeers, 'username me');
-                //people joined my cart
-                createElement('ul', '', document.getElementsByClassName('users')[0], null, 'peers-list');
-                users[key].peers.forEach(function (peer) {
-                    createElement('li', peer.name, document.getElementsByClassName('peers-list')[0], null, 'peer');
-                });
-            }
+            var peers = _.result(users[key], 'peers') || [];
+            createElement('div', text + " (+" + users[key].peers.length + ")", document.getElementsByClassName(users[key].cart)[0], togglePeers, 'username me');
+            //people joined my cart
+            createElement('ul', '', document.getElementsByClassName('users')[0], null, 'peers-list');
+            users[key].peers.forEach(function (peer) {
+                createElement('li', peer.name, document.getElementsByClassName('peers-list')[0], null, 'peer');
+            });
         }
     }
 
@@ -128,7 +127,7 @@ function listenOnOrderConfirm(fn) {
 function onChange() {
     var resName;
     var restData = $("div[data-restaurant-details-main-div]").data();
-    
+
     if (restData.resName) {
         resName = restData.resName;
     }

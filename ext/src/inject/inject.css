@@ -62,9 +62,12 @@
 
 }
 
+.content .users.disabled .join {
+    display: none;
+}
+
 .content .users .user {
-    width:100%
-    color: #fff;
+    width: 100% color : #fff;
     display: flex;
     align-items: center;
     justify-content: flex-start;
@@ -78,7 +81,7 @@
     white-space: nowrap;
     text-overflow: ellipsis;
     width: 80%;
-    color:#fff;
+    color: #fff;
 }
 
 .content .users .user .username.me {
@@ -91,6 +94,9 @@
     height: 30px;
     background-image: url('/Content/Images/RestaurantListIcon-off.png');
     background-repeat: no-repeat;
+    position: absolute;
+    left: -7px;
+    top: 5px;
 }
 
 .content .users .peers-list {
