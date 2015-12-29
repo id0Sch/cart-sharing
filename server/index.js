@@ -69,7 +69,7 @@ io.on('connection', function (socket) {
             delete users[data.user.mail];
         } else {
             var host = _.find(users, {cart: data.user.cart});
-            if (host) {
+            if (host && host.peers) {
                 var me = _.findIndex(host.peers, {mail: data.user.mail});
                 host.peers.splice(me, 1);
                 console.log(host.peers);
