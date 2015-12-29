@@ -14,14 +14,14 @@
 
 .content .menu {
     position: fixed;
-    left: -220px;
+    left: -300px;
     display: flex;
     flex-direction: column;
     background-color: #C5242A;
     top: 160px;
     transition: left 200ms;
     transition-delay: 200ms;
-    width: 220px;
+    width: 300px;
     box-sizing: border-box;
     align-items: center;
     padding: 10px;
@@ -35,7 +35,7 @@
     font-weight: bold;
     background-color: #EDEDED;
     height: 32px;
-    width: 160px;
+    width: 80%;
     padding: 0;
     margin-top: 10px;
 }
@@ -50,42 +50,44 @@
     margin-bottom: 10px;
     text-decoration: underline;
     cursor: pointer;
-    width: 160px;
+    width: 80%;
     display: block;
     text-align: left;
     color: #fff;
 }
 
 .content .users {
-    width: 160px;
+    width: 80%;
     margin-top: 10px;
 
 }
 
 .content .users .user {
+    width:100%
     color: #fff;
     display: flex;
     align-items: center;
     justify-content: flex-start;
     position: relative;
-    padding: 10px;
+    padding: 10px 0;
 }
 
-content .users .user .username {
+.content .users .user .username {
     box-sizing: content-box;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-    width: 120px;
+    width: 80%;
 }
 
 .content .users .user .username.me {
     cursor: pointer;
 }
 
-.content .users .user.host {
-    color: #000;
-    font-weight: bold;
+.content .users .user.host::before {
+    content: "";
+    background-image: url('/Content/Images/Validation/vi.png');
+    background-repeat: no-repeat;
 }
 
 .content .users .peers-list {

@@ -57,15 +57,17 @@ function renderUsers(users) {
     for (var key in users) {
         index++;
         createElement('div', '', document.getElementsByClassName('users')[0], null, ' user ' + users[key].cart);
+        var text = users[key].name + " " + (users[key].rest || '');
         if (users[key].mail !== me.mail) {
-            createElement('div', users[key].name, document.getElementsByClassName(users[key].cart)[0], null, 'username');
+            createElement('div', text, document.getElementsByClassName(users[key].cart)[0], null, 'username');
             createElement('span', 'join', document.getElementsByClassName(users[key].cart)[0], function () {
                 join(users[key]);
             }, 'join');
+
         } else {
             //me
             if (_.size(_.result(users[key], 'peers'))) {
-                createElement('div', users[key].name + " (+"+ users[key].peers.length+ ")", document.getElementsByClassName(users[key].cart)[0], togglePeers, 'username me');
+                createElement('div', text + " (+" + users[key].peers.length + ")", document.getElementsByClassName(users[key].cart)[0], togglePeers, 'username me');
                 //people joined my cart
                 createElement('ul', '', document.getElementsByClassName('users')[0], null, 'peers-list');
                 users[key].peers.forEach(function (peer) {
@@ -124,7 +126,7 @@ function listenOnOrderConfirm(fn) {
 }
 
 function onChange() {
-    chrome.runtime.sendMessage(extId, {fn: 'updatePeers', event: 'update', cart: cartId, resName : resName});
+    chrome.runtime.sendMessage(extId, {fn: 'updatePeers', event: 'update', cart: cartId, resName: resName});
 }
 
 function onConfirm() {
@@ -228,7 +230,7 @@ function openMenu() {
 }
 
 function closeMenu() {
-    $(".content .menu").css('left', 220 * -1 + 'px');
+    $(".content .menu").css('left', 300 * -1 + 'px');
     setTimeout(function () {
         $(".content .handle").css('left', 0);
     }, 200);
