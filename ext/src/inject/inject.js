@@ -42,19 +42,29 @@ function shareCart() {
     }
     //chrome.extension.sendMessage({fn: 'shareCart', user: user});
 }
-//function getActiveFriends(friends, callback) {
-//
-//}
 
 // updates cart
 var actions = {
     updateUsers: function (data) {
         if (_.get(data, 'users')) {
             users = data.users;
-            console.log(data.users);
+            renderUsers(users);
         }
     }
 };
+
+function renderUsers(users) {
+    var index = 0;
+    createElement('div', '', document.getElementsByClassName('menu')[0], null, 'users');
+    for (var key in users) {
+        index++;
+        createElement('div', '', document.getElementsByClassName('users')[0], null, 'user' + index + ' user');
+        createElement('div', users[key].name, document.getElementsByClassName('user' + index)[0], null, 'username');
+        createElement('span', 'join', document.getElementsByClassName('user' + index)[0], function(){
+            join(users[key]);
+        }, 'join');
+    }
+}
 
 
 function callPageFunction(name) {
@@ -76,7 +86,6 @@ function injectMenu() {
     createElement('div', '', document.getElementsByClassName('content')[0], null, 'menu');
     createElement('div', 'x', document.getElementsByClassName('menu')[0], closeMenu, 'close');
     createElement('button', 'share', document.getElementsByClassName('menu')[0], share, 'share');
-    createElement('button', 'join', document.getElementsByClassName('menu')[0], join, 'join');
     createElement('div', 'Cart sharing menu', document.getElementsByClassName('content')[0], openMenu, 'handle');
 
 
@@ -116,18 +125,17 @@ function share() {
 }
 
 
-function join() {
-    var cartId = window.prompt("sometext", "defaultText");
-    //to do- validate uuid
-    if (cartId) {
-        joinToCart(cartId);
+function join(user) {
+    //to do - validate uuid
+    if (user.cart) {
+        joinToCart(user.cart);
         //refresh the delivery ui
         if (location.pathname.indexOf("/Restaurants/Menu/Delivery/") === -1) {
             //not restaurant page
             location.reload();
         } else {
             $("div[data-shoppingCart-main-div='true']").show();
-            _ShoppingCart.Init();
+            callPageFunction('_ShoppingCart.ReloadShoppingCart');
         }
     }
 }
@@ -138,7 +146,7 @@ function openMenu() {
 }
 
 function closeMenu() {
-    $(".content .menu").css('left', $(".content .menu").width() * -1 + 'px');
+    $(".content .menu").css('left', 220 * -1 + 'px');
     setTimeout(function () {
         $(".content .handle").css('left', 0);
     }, 200);

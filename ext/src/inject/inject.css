@@ -14,28 +14,55 @@
 
 .content .menu {
     position: fixed;
-    left: -200px;
+    left: -220px;
     display: flex;
     flex-direction: column;
     background-color: #C5242A;
     top: 160px;
     transition: left 200ms;
     transition-delay: 200ms;
+    width: 220px;
+    box-sizing: border-box;
+    align-items: center;
     padding: 10px;
+    display: flex;
 }
+
 
 .content .menu .share {
     margin-bottom: 10px;
-}
-
-.content .menu button {
     border: 1px solid #980000;
     color: #CE272D;
     font-weight: bold;
     background-color: #EDEDED;
     height: 32px;
-    min-width: 140px;
-    text-align: center;
+    width: 160px;
+    padding: 0;
+    margin-top: 20px;
+}
+
+.content .users{
+    width: 100%;
+}
+.content .users .user {
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    position: relative;
+    padding: 10px;
+}
+
+.content .users .user:not(:first-child) {
+    border-top: #981C23 1px solid;
+    box-shadow: inset 0 1px 0 0 #F85A5A;
+}
+
+.content .users .user span {
+    left: 0;
+    position: absolute;
+    text-decoration: underline;
+    cursor: pointer;
 }
 
 .content .close {
