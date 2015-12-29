@@ -4,6 +4,8 @@
 // var settings = new Store("settings", {
 //     "sample_setting": "This is how you use Store.js to remember values"
 // });
+
+
 console.log('connecting to ', config.server);
 var socket = io(config.server, {secure: true});
 var users = {};
@@ -47,6 +49,9 @@ function getCart(callback) {
         }
     });
 }
+/**
+ * actions exposed to content-script
+ */
 var cart = {
     refreshUsers: function (data, callback) {
         console.log('fetching users', _.size(users));
@@ -85,15 +90,16 @@ var cart = {
         });
     }
 };
-//example of using a message handler from the inject scripts
-//joinCart('d37dfc49-205d-4bb4-b83d-0af2f6b3c47f')
 
 /*
- relays messages from web page to content-script
+ * relays messages from web page to content-script
  */
 chrome.runtime.onMessageExternal.addListener(function (request, sender, sendResponse) {
     sendToContentPage(request);
 }); // messages from page
+/**
+ * responds to messages send from content-page
+ */
 chrome.extension.onMessage.addListener(
     function (request, sender, sendResponse) {
         if (request && request.fn && cart && cart[request.fn]) {

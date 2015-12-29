@@ -33,8 +33,8 @@ function shareCart(callback) {
 // updates cart
 var actions = {
     updatePeers: function (event) {
-        console.log(event);
-        sendMsg({fn: 'updatePeers', event: event, cart: me.cart});
+        event.cart = me.cart;
+        sendMsg(event);
     },
     updateUsers: function (data) {
         if (_.get(data, 'users')) {
@@ -43,6 +43,7 @@ var actions = {
         }
     },
     updateDish: function (data) {
+        console.log(data.cart, me.cart);
         if (data.cart == me.cart) {
             console.log('disturbance in the force felt');
             callPageFunction('_ShoppingCart.ReloadShoppingCart');
@@ -90,14 +91,16 @@ function main() {
             name: rawData.loginUserName,
             mail: rawData.loginUserEmail
         };
-
+        getCartId(function (cart) {
+            me.cart = cart;
+            injectMenu();
+            refreshUsers(actions.updateUsers);
+            listenOnChanges(onChange);
+            //listenOnOrderConfirm(onConfirm);
+        });
     } else {
         callback('no user');
     }
-    injectMenu();
-    refreshUsers(actions.updateUsers);
-    listenOnChanges(onChange);
-    //listenOnOrderConfirm(onConfirm);
 
 }
 
