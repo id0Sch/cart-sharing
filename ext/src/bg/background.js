@@ -4,13 +4,17 @@
 // var settings = new Store("settings", {
 //     "sample_setting": "This is how you use Store.js to remember values"
 // });
-var socket = io('https://localhost:3001/', {secure: true});
+var socket = io(config.server, {secure: true});
 var users = {};
 
 socket.on('users', function (data) {
+    console.log('got msg from backend');
     users = data;
-    console.log(users);
-    chrome.runtime.sendMessage({fn: 'updateUsers', users: users});
+
+    chrome.tabs.query({active: true}, function (tabs) {
+        // send the message to the content script
+        chrome.tabs.sendMessage(tabs[0].id, {fn: 'updateUsers', users: users});
+    });
 });
 
 function getCart(callback) {
@@ -28,7 +32,8 @@ function getCart(callback) {
 }
 var cart = {
     refreshUsers: function (data, callback) {
-        callback({users: users});
+        console.log('fetching users', _.size(users));
+        callback(null, {users: users});
     },
     getCartId: function (data, callback) {
         getCart(callback);
@@ -38,7 +43,6 @@ var cart = {
             if (err) {
                 return callback(err, null);
             }
-
             data.user.cart = cart;
             socket.user = data.user;
             socket.emit('peer-joined', data.user);

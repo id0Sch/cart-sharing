@@ -1,9 +1,13 @@
-var cart;
+var cart, users, me;
+
 function getCartId(callback) {
     chrome.extension.sendMessage({fn: 'getCartId'}, callback);
 }
-function setCartId(cart, callback) {
-    chrome.extension.sendMessage({fn: 'join', guid: cart}, callback);
+function joinToCart(cart) {
+    chrome.extension.sendMessage({fn: 'join', guid: cart}, function () {
+        console.log('got new cart', cart);
+        triggerEvent('MenuDishesChanged');
+    });
 }
 function getFriendsList() {
     return $.map($('select[data-mealdeal-assigned-users-select="true"].MealDealAssignedUser')[0].options, function (option) {
@@ -23,14 +27,29 @@ function initSocket(user, callback) {
 function refreshUsers(callback) {
     chrome.extension.sendMessage({fn: 'refreshUsers'}, callback);
 }
+function shareCart() {
+    var rawData = $('.HeaderTexture[data-login-user-email]').data();
+    if (rawData) {
+        me = {
+            name: rawData.loginUserName,
+            mail: rawData.loginUserEmail
+        };
+        initSocket(me, function (user) {
+            me = user;
+        });
+    } else {
+        console.log('no user');
+    }
+    //chrome.extension.sendMessage({fn: 'shareCart', user: user});
+}
 //function getActiveFriends(friends, callback) {
 //
 //}
-var users, me;
+
 // updates cart
 var actions = {
     updateUsers: function (data) {
-        if (data.users) {
+        if (_.get(data, 'users')) {
             users = data.users;
             console.log(data.users);
         }
@@ -38,22 +57,18 @@ var actions = {
 };
 
 
-function main() {
-    var rawData = $('.HeaderTexture[data-login-user-email]').data();
-    if (rawData) {
-        me = {
-            name: rawData.loginUserName,
-            mail: rawData.loginUserEmail
-        };
-        initSocket(me, function (user) { //optional callback
-            me = user;
-        });
-    } else {
-        console.log('no user');
-    }
+function triggerEvent(name) {
+    var scriptContent = "$(document).trigger('" + name + "');";
+    var script = document.createElement('script');
+    script.id = 'tmpScript';
+    script.appendChild(document.createTextNode(scriptContent));
+    (document.body || document.head || document.documentElement).appendChild(script);
+    $("#tmpScript").remove();
+}
 
-    refreshUsers(actions.updateUsers);
+function main() {
     injectMenu();
+    refreshUsers(actions.updateUsers);
 }
 
 function injectMenu() {
@@ -83,22 +98,30 @@ function createElement(type, html, locationElement, click, className) {
     locationElement.appendChild(element);
 }
 
+function copyToClipboard(text) {
+    const input = document.createElement('input');
+    input.style.position = 'fixed';
+    input.style.opacity = 0;
+    input.value = text;
+    document.body.appendChild(input);
+    input.select();
+    document.execCommand('Copy');
+}
+
 function share() {
     getCartId(function (cartId) {
-        const input = document.createElement('input');
-        input.style.position = 'fixed';
-        input.style.opacity = 0;
-        input.value = cartId;
-        document.body.appendChild(input);
-        input.select();
-        document.execCommand('Copy');
+        copyToClipboard(cartId);
+        alert("cart id was copied to clipboard");
     });
-    alert("cart id was copied to clipboard");
 }
 
 
 function join() {
     var cartId = window.prompt("sometext", "defaultText");
+    //to do- validate uuid
+    if (cartId) {
+        joinToCart(cartId);
+    }
 }
 
 function openMenu() {
