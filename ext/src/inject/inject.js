@@ -1,55 +1,53 @@
-var cart, users, me;
+var users, me;
 
+function sendMsg(msg, callback) {
+    chrome.extension.sendMessage(msg, callback);
+}
 function getCartId(callback) {
-    chrome.extension.sendMessage({fn: 'getCartId'}, callback);
+    sendMsg({fn: 'getCartId'}, callback);
 }
 function joinToCart(cart) {
-    chrome.extension.sendMessage({fn: 'join', guid: cart}, function () {
+    sendMsg({fn: 'join', guid: cart}, function () {
         console.log('got new cart', cart);
+        me.cart = cart;
         callPageFunction('_ShoppingCart.ReloadShoppingCart');
     });
 }
-function getFriendsList() {
-    return $.map($('select[data-mealdeal-assigned-users-select="true"].MealDealAssignedUser')[0].options, function (option) {
-        return {name: $(option).text(), id: $(option).val()};
-    });
-}
-
-function getConnections(me, friends) {
-    chrome.extension.sendMessage({fn: 'conn', me: me, friends: friends}, function (response) {
-        console.log(response);
-    });
-}
 function initSocket(user, callback) {
-    chrome.extension.sendMessage({fn: 'login', user: user}, callback);
+    sendMsg({fn: 'login', user: user}, callback);
 }
 
 function refreshUsers(callback) {
-    chrome.extension.sendMessage({fn: 'refreshUsers'}, callback);
+    sendMsg({fn: 'refreshUsers'}, callback);
 }
-function shareCart() {
-    var rawData = $('.HeaderTexture[data-login-user-email]').data();
-    if (rawData) {
-        me = {
-            name: rawData.loginUserName,
-            mail: rawData.loginUserEmail
-        };
+
+function shareCart(callback) {
         initSocket(me, function (user) {
             me = user;
+        callback(null, 'success');
         });
-    } else {
-        console.log('no user');
+
     }
-    //chrome.extension.sendMessage({fn: 'shareCart', user: user});
-}
+
 
 // updates cart
 var actions = {
+    updatePeers: function (event) {
+        event.cart = me.cart;
+        sendMsg(event);
+    },
     updateUsers: function (data) {
         if (_.get(data, 'users')) {
             users = data.users;
             renderUsers(users);
         }
+    },
+    updateDish: function (data) {
+        console.log(data.cart, me.cart);
+        if (data.cart == me.cart) {
+            console.log('disturbance in the force felt');
+            callPageFunction('_ShoppingCart.ReloadShoppingCart');
+    }
     }
 };
 
@@ -66,7 +64,29 @@ function renderUsers(users) {
     }
 }
 
+function listenOnChanges(fn) {
+    var scriptContent = 'var extId="' + chrome.runtime.id + '";$(document).bind("MenuDishesChanged QuantityChanged MealDealRemoved", ' + fn + ')';
+    var script = document.createElement('script');
+    script.id = 'tmpScript';
+    script.appendChild(document.createTextNode(scriptContent));
+    (document.body || document.head || document.documentElement).appendChild(script);
+    $("#tmpScript").remove();
+}
+function listenOnOrderConfirm(fn) {
+    var scriptContent = '$(document).bind("MOrderConfirmed", ' + fn + ')';
+    var script = document.createElement('script');
+    script.id = 'tmpScript';
+    script.appendChild(document.createTextNode(scriptContent));
+    (document.body || document.head || document.documentElement).appendChild(script);
+    $("#tmpScript").remove();
+}
+function onChange() {
+    chrome.runtime.sendMessage(extId, {fn: 'updatePeers', event: 'update'});
+}
 
+//function onConfirm() {
+//    chrome.runtime.sendMessage({fn: 'updatePeers', event: 'order'});
+//}
 function callPageFunction(name) {
     var scriptContent = name + "();";
     var script = document.createElement('script');
@@ -77,8 +97,23 @@ function callPageFunction(name) {
 }
 
 function main() {
+    var rawData = $('.HeaderTexture[data-login-user-email]').data();
+    if (rawData) {
+        me = {
+            name: rawData.loginUserName,
+            mail: rawData.loginUserEmail
+        };
+        getCartId(function (cart) {
+            me.cart = cart;
     injectMenu();
     refreshUsers(actions.updateUsers);
+            listenOnChanges(onChange);
+            //listenOnOrderConfirm(onConfirm);
+        });
+    } else {
+        callback('no user');
+}
+
 }
 
 function injectMenu() {
@@ -107,23 +142,11 @@ function createElement(type, html, locationElement, click, className) {
     locationElement.appendChild(element);
 }
 
-function copyToClipboard(text) {
-    const input = document.createElement('input');
-    input.style.position = 'fixed';
-    input.style.opacity = 0;
-    input.value = text;
-    document.body.appendChild(input);
-    input.select();
-    document.execCommand('Copy');
-}
-
 function share() {
-    getCartId(function (cartId) {
-        copyToClipboard(cartId);
-        alert("cart id was copied to clipboard");
+    shareCart(function (err, data) {
+        console.log(err || data);
     });
 }
-
 
 function join(user) {
     //to do - validate uuid
@@ -152,10 +175,12 @@ function closeMenu() {
     }, 200);
 }
 
-chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+function messageHandler(request, sender, sendResponse) {
     console.log('got msg', request.fn);
     actions[request.fn](request);
-});
+}
+
+chrome.runtime.onMessage.addListener(messageHandler); // messages from background script
 
 var readyStateCheckInterval = setInterval(function () {
     if (document.readyState === "complete") {
