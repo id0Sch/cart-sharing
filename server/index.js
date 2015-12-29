@@ -17,7 +17,23 @@ app.get('/', function (req, res) {
     return res.end('<h1>Hello, Secure World!</h1>');
 });
 
-var users = {};
+var users = {
+    "my.test.user@ironsrc.com": {
+        mail: "my.test.user@ironsrc.com",
+        name: "משתמש בדיקה 1 ",
+        cart: 'xxxxxy-xxxxx-xxxx-xxxx-xxx'
+    },
+    "my.test.user2@ironsrc.com": {
+        mail: "my.test.user2@ironsrc.com",
+        name: "מ2תמש בדיקה 1 ",
+        cart: 'xxxxxx-xxxxx-xxxx-xxxx-xxx'
+    },
+    "my.test.user3@ironsrc.com": {
+        mail: "my.test.user3@ironsrc.com",
+        name: "מ2תמ2 בדיקה 1 ",
+        cart: 'xxxxxz-xxxxx-xxxx-xxxx-xxx'
+    }
+};
 
 var io = require('socket.io')(server);
 
