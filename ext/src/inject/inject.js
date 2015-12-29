@@ -121,6 +121,14 @@ function join() {
     //to do- validate uuid
     if (cartId) {
         joinToCart(cartId);
+        //refresh the delivery ui
+        if (location.pathname.indexOf("/Restaurants/Menu/Delivery/") === -1) {
+            //not restaurant page
+            location.reload();
+        } else {
+            $("div[data-shoppingCart-main-div='true']").show();
+            _ShoppingCart.Init();
+        }
     }
 }
 
