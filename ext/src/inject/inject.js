@@ -66,8 +66,13 @@ function renderUsers(users) {
     }
 }
 
+
+/**
+ * ------------ start of web-page context run --------------------
+ * runs in scope of web-page , sends message to background.js
+ */
 function listenOnChanges(fn) {
-    var scriptContent = 'var cartId="' + me.cart + '";var extId="' + chrome.runtime.id + '";$(document).bind("MenuDishesChanged QuantityChanged MealDealRemoved", ' + fn + ')';
+    var scriptContent = 'var cartId="' + me.cart + '";var extId="' + chrome.runtime.id + '";$(document).bind("MenuDishesChanged QuantityChanged MealDealRemoved DishRemoved TipUpdated DiscounCouponAdded AddressSelected DeliveryMethodChanged", ' + fn + ')';
     var script = document.createElement('script');
     script.id = 'tmpScript';
     script.appendChild(document.createTextNode(scriptContent));
@@ -75,7 +80,7 @@ function listenOnChanges(fn) {
     $("#tmpScript").remove();
 }
 function listenOnOrderConfirm(fn) {
-    var scriptContent = '$(document).bind("MOrderConfirmed", ' + fn + ')';
+    var scriptContent = 'var cartId="' + me.cart + '";var extId="' + chrome.runtime.id + '";$(document).bind("MOrderConfirmed", ' + fn + ')';
     var script = document.createElement('script');
     script.id = 'tmpScript';
     script.appendChild(document.createTextNode(scriptContent));
@@ -83,13 +88,13 @@ function listenOnOrderConfirm(fn) {
     $("#tmpScript").remove();
 }
 
-function onChange() { //runs in scope of web-page , sends message to background.js
+function onChange() {
     chrome.runtime.sendMessage(extId, {fn: 'updatePeers', event: 'update', cart: cartId});
 }
 
-//function onConfirm() {
-//    chrome.runtime.sendMessage({fn: 'updatePeers', event: 'order'});
-//}
+function onConfirm() {
+    chrome.runtime.sendMessage(extId, {fn: 'updatePeers', event: 'order', cart: cartId});
+}
 function callPageFunction(name) {
     var scriptContent = name + "();";
     var script = document.createElement('script');
@@ -98,6 +103,9 @@ function callPageFunction(name) {
     (document.body || document.head || document.documentElement).appendChild(script);
     $("#tmpScript").remove();
 }
+
+// ----------- end of web-page context run -----------------------
+
 
 function main() {
     var rawData = $('.HeaderTexture[data-login-user-email]').data();
@@ -111,7 +119,7 @@ function main() {
             injectMenu();
             refreshUsers(actions.updateUsers);
             listenOnChanges(onChange);
-            //listenOnOrderConfirm(onConfirm);
+            listenOnOrderConfirm(onConfirm);
         });
     } else {
         callback('no user');
