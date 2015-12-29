@@ -68,16 +68,9 @@ var cart = {
         console.log('updating everyone about change in cart', data.cart);
         socket.emit('update-peers', data);
     },
-    login: function (data, callback) {
-        getCart(function (err, cart) {
-            if (err) {
-                return callback(err, null);
-            }
-            data.user.cart = cart;
-            socket.user = data.user;
+    share: function (data, callback) {
             socket.emit('peer-joined', data.user);
-            callback(null, socket.user);
-        });
+            callback(null, data.user);
     },
     join: function joinCart(data, callback) {
         var guid = data.guid;

@@ -13,20 +13,16 @@ function joinToCart(cart) {
         callPageFunction('_ShoppingCart.ReloadShoppingCart');
     });
 }
-function initSocket(user, callback) {
-    sendMsg({fn: 'login', user: user}, callback);
-}
 
 function refreshUsers(callback) {
     sendMsg({fn: 'refreshUsers'}, callback);
 }
 
 function shareCart(callback) {
-    initSocket(me, function (user) {
+    sendMsg({fn: 'share', user: me}, function (user) {
         me = user;
         callback(null, 'success');
     });
-
 }
 function reset(callback) {
     sendMsg({fn: 'reset', user: me});
