@@ -28,7 +28,8 @@ function getCart(callback) {
 }
 var cart = {
     refreshUsers: function (data, callback) {
-        callback({users: users});
+        console.log('fetching users', users);
+        callback(null, {users: users});
     },
     getCartId: function (data, callback) {
         getCart(callback);

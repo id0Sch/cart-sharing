@@ -30,7 +30,8 @@ var users, me;
 // updates cart
 var actions = {
     updateUsers: function (data) {
-        if (data.users) {
+        console.log(data);
+        if (_.get(data, 'users')) {
             users = data.users;
             console.log(data.users);
         }
@@ -69,18 +70,6 @@ function main() {
     }
 
     refreshUsers(actions.updateUsers);
-    //add('button', 'change cart', 'AddressUpperBarTr', function () {
-    //    setCartId('b096eefb-bde7-42da-836e-afc4a6daf48c', function (cart) {
-    //        console.log('got new cart', cart);
-    //        $(document).trigger("MenuDishesChanged");
-    //    });
-    //});
-    //getCartId(function (cart) {
-    //    add('input', cart, 'AddressUpperBarTr', function () {
-    //        getCartId(function (cart) {
-    //        });
-    //    });
-    //});
 }
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {

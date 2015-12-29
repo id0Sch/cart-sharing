@@ -14,7 +14,7 @@
     "scripts": [
       "/config.js",
       "js/socket.io.js",
-      "js/socketiop2p.min.js",
+      "js/lodash.min.js",
       "src/bg/background.js"
     ],
     "persistent": true
@@ -39,8 +39,7 @@
       ],
       "js": [
         "js/jquery.js",
-        "js/firebase.js",
-        "js/dataChannel.js",
+        "js/lodash.min.js",
         "src/inject/inject.js"
       ]
     }
