@@ -38,6 +38,9 @@ io.on('connection', function (socket) {
         updateUsers();
     });
 
+    socket.on('update-peers', function (data) {
+        socket.broadcast.emit('update-peers', data);
+    });
     socket.on('peer-joined-order', function (data) {
         socket.broadcast.emit('peer-joined-order', data);
     });
@@ -45,7 +48,6 @@ io.on('connection', function (socket) {
     socket.on('peer-shared', function (data) {
         socket.broadcast.emit('peer-shared', data);
     });
-
     //socket.on('peer-added-item', function (data){
     //
     //})
