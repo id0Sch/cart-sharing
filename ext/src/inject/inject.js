@@ -57,12 +57,14 @@ function renderUsers(users) {
     elem.innerHTML = '';
 
     for (var key in users) {
-        index++;
-        createElement('div', '', document.getElementsByClassName('users')[0], null, 'user' + index + ' user');
-        createElement('div', users[key].name, document.getElementsByClassName('user' + index)[0], null, 'username');
-        createElement('span', 'join', document.getElementsByClassName('user' + index)[0], function () {
-            join(users[key]);
-        }, 'join');
+        if(users[key].mail !== me.mail){
+            index++;
+            createElement('div', '', document.getElementsByClassName('users')[0], null, 'user' + index + ' user');
+            createElement('div', users[key].name, document.getElementsByClassName('user' + index)[0], null, 'username');
+            createElement('span', 'join', document.getElementsByClassName('user' + index)[0], function () {
+                join(users[key]);
+            }, 'join');
+        }
     }
 }
 
