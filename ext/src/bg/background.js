@@ -7,7 +7,7 @@
 
 
 console.log('connecting to ', config.server);
-var socket = io(config.server, {secure: true});
+var socket = io(config.server);
 var users = {};
 
 var port = chrome.runtime.connect({name: "back-inject"});
