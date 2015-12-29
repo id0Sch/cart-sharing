@@ -55,18 +55,32 @@ function renderUsers(users) {
     elem.innerHTML = '';
 
     for (var key in users) {
+        index++;
+        createElement('div', '', document.getElementsByClassName('users')[0], null, ' user ' + users[key].cart);
         if (users[key].mail !== me.mail) {
-            index++;
-            createElement('div', '', document.getElementsByClassName('users')[0], null, 'user' + index + ' user ' + users[key].cart);
-            createElement('div', users[key].name, document.getElementsByClassName('user' + index)[0], null, 'username');
-            createElement('span', 'join', document.getElementsByClassName('user' + index)[0], function () {
+            createElement('div', users[key].name, document.getElementsByClassName(users[key].cart)[0], null, 'username');
+            createElement('span', 'join', document.getElementsByClassName(users[key].cart)[0], function () {
                 join(users[key]);
             }, 'join');
+        } else {
+            //me
+            if (_.size(_.result(users[key], 'peers'))) {
+                createElement('div', users[key].name + " (+"+ users[key].peers.length+ ")", document.getElementsByClassName(users[key].cart)[0], togglePeers, 'username me');
+                //people joined my cart
+                createElement('ul', '', document.getElementsByClassName('users')[0], null, 'peers-list');
+                users[key].peers.forEach(function (peer) {
+                    createElement('li', peer.name, document.getElementsByClassName('peers-list')[0], null, 'peer');
+                });
+            }
         }
     }
 
+    function togglePeers() {
+        $(".peers-list").toggle();
+    }
+
     //if my user is in users list -  means i'm in share mode
-    if (_.find(users, {mail: me.mail})) {
+    if (_.size(users[me.mail])) {
         disableForm();
     }
 
@@ -79,6 +93,7 @@ function renderUsers(users) {
             markUser(host);
         }
     }
+
 }
 
 function markUser(user) {
@@ -98,6 +113,7 @@ function listenOnChanges(fn) {
     (document.body || document.head || document.documentElement).appendChild(script);
     $("#tmpScript").remove();
 }
+
 function listenOnOrderConfirm(fn) {
     var scriptContent = 'var cartId="' + me.cart + '";var extId="' + chrome.runtime.id + '";$(document).bind("MOrderConfirmed", ' + fn + ')';
     var script = document.createElement('script');
@@ -114,6 +130,7 @@ function onChange() {
 function onConfirm() {
     chrome.runtime.sendMessage(extId, {fn: 'updatePeers', event: 'order', cart: cartId});
 }
+
 function callPageFunction(name) {
     var scriptContent = name + "();";
     var script = document.createElement('script');
@@ -152,7 +169,7 @@ function injectMenu() {
     createElement('div', 'x', document.getElementsByClassName('menu')[0], closeMenu, 'close');
     createElement('div', '', document.getElementsByClassName('menu')[0], null, 'users');
     createElement('button', 'share', document.getElementsByClassName('menu')[0], share, 'share');
-    createElement('button', 'reset', document.getElementsByClassName('menu')[0], reset, 'reset');
+    createElement('span', 'reset', document.getElementsByClassName('menu')[0], reset, 'reset');
     createElement('div', 'Cart sharing menu', document.getElementsByClassName('content')[0], openMenu, 'handle');
 
 
