@@ -45,6 +45,12 @@
     width: 100%;
     margin-top: 10px;
 }
+
+.content .users.disabled{
+    opacity: 0.5;
+    pointer-events: none;
+    cursor: default;
+}
 .content .users .user {
     color: #fff;
     display: flex;

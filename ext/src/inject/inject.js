@@ -53,7 +53,7 @@ function renderUsers(users) {
     elem.innerHTML = '';
 
     for (var key in users) {
-        if(users[key].mail !== me.mail){
+        if (users[key].mail !== me.mail) {
             index++;
             createElement('div', '', document.getElementsByClassName('users')[0], null, 'user' + index + ' user');
             createElement('div', users[key].name, document.getElementsByClassName('user' + index)[0], null, 'username');
@@ -61,6 +61,11 @@ function renderUsers(users) {
                 join(users[key]);
             }, 'join');
         }
+    }
+
+    //if my user is in users list -  means i'm in share mode
+    if(_.find(users,{mail:me.mail})){
+        disableJoin();
     }
 }
 
@@ -155,7 +160,13 @@ function createElement(type, html, locationElement, click, className) {
 function share() {
     shareCart(function (err, data) {
         console.log(err || data);
+        disableJoin();
     });
+}
+
+function disableJoin() {
+    //disable join users
+    $(".users").removeClass('disabled').addClass('disabled');
 }
 
 function join(user) {

@@ -19,6 +19,7 @@ app.get('/', function (req, res) {
 var users = {};
 
 var io = require('socket.io')(server);
+
 io.on('connection', function (socket) {
     function updateUsers() {
         socket.broadcast.emit('users', users);
