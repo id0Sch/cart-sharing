@@ -22,12 +22,12 @@ function refreshUsers(callback) {
 }
 
 function shareCart(callback) {
-        initSocket(me, function (user) {
-            me = user;
+    initSocket(me, function (user) {
+        me = user;
         callback(null, 'success');
-        });
+    });
 
-    }
+}
 
 
 // updates cart
@@ -39,6 +39,7 @@ var actions = {
     updateUsers: function (data) {
         if (_.get(data, 'users')) {
             users = data.users;
+            console.log(users);
             renderUsers(users);
         }
     },
@@ -47,7 +48,7 @@ var actions = {
         if (data.cart == me.cart) {
             console.log('disturbance in the force felt');
             callPageFunction('_ShoppingCart.ReloadShoppingCart');
-    }
+        }
     }
 };
 
@@ -58,7 +59,7 @@ function renderUsers(users) {
         index++;
         createElement('div', '', document.getElementsByClassName('users')[0], null, 'user' + index + ' user');
         createElement('div', users[key].name, document.getElementsByClassName('user' + index)[0], null, 'username');
-        createElement('span', 'join', document.getElementsByClassName('user' + index)[0], function(){
+        createElement('span', 'join', document.getElementsByClassName('user' + index)[0], function () {
             join(users[key]);
         }, 'join');
     }
@@ -105,14 +106,14 @@ function main() {
         };
         getCartId(function (cart) {
             me.cart = cart;
-    injectMenu();
-    refreshUsers(actions.updateUsers);
+            injectMenu();
+            refreshUsers(actions.updateUsers);
             listenOnChanges(onChange);
             //listenOnOrderConfirm(onConfirm);
         });
     } else {
         callback('no user');
-}
+    }
 
 }
 

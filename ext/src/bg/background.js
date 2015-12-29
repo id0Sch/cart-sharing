@@ -10,10 +10,12 @@ console.log('connecting to ', config.server);
 var socket = io(config.server, {secure: true});
 var users = {};
 
-function sendToContentPage(data) {
+function sendToContentPage(data) { //todo: change to long-connection
     chrome.tabs.query({active: true}, function (tabs) {
         // send the message to the content script
-        chrome.tabs.sendMessage(tabs[0].id, data);
+        _.each(tabs, function (tab) {
+            chrome.tabs.sendMessage(tab.id, data);
+        });
     });
 }
 socket.on('users', function (data) {
@@ -104,7 +106,6 @@ chrome.extension.onMessage.addListener(
     function (request, sender, sendResponse) {
         if (request && request.fn && cart && cart[request.fn]) {
             cart[request.fn](request, function (err, data) {
-                console.log(err);
                 return sendResponse(data);
             });
         }
