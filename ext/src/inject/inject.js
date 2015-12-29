@@ -22,24 +22,20 @@ function refreshUsers(callback) {
 }
 
 function shareCart(callback) {
-        initSocket(me, function (user) {
-            me = user;
+    initSocket(me, function (user) {
+        me = user;
         callback(null, 'success');
-        });
+    });
 
-    }
+}
 
 
 // updates cart
 var actions = {
-    updatePeers: function (event) {
-        event.cart = me.cart;
-        sendMsg(event);
-    },
     updateUsers: function (data) {
-        console.log("updateUsers",data);
+        console.log("updateUsers", data);
         if (_.get(data, 'users')) {
-            console.log("data.users",data.users);
+            console.log("data.users", data.users);
             users = data.users;
             console.log(users);
             renderUsers(users);
@@ -50,7 +46,7 @@ var actions = {
         if (data.cart == me.cart) {
             console.log('disturbance in the force felt');
             callPageFunction('_ShoppingCart.ReloadShoppingCart');
-    }
+        }
     }
 };
 
@@ -64,14 +60,14 @@ function renderUsers(users) {
         index++;
         createElement('div', '', document.getElementsByClassName('users')[0], null, 'user' + index + ' user');
         createElement('div', users[key].name, document.getElementsByClassName('user' + index)[0], null, 'username');
-        createElement('span', 'join', document.getElementsByClassName('user' + index)[0], function(){
+        createElement('span', 'join', document.getElementsByClassName('user' + index)[0], function () {
             join(users[key]);
         }, 'join');
     }
 }
 
 function listenOnChanges(fn) {
-    var scriptContent = 'var extId="' + chrome.runtime.id + '";$(document).bind("MenuDishesChanged QuantityChanged MealDealRemoved", ' + fn + ')';
+    var scriptContent = 'var cartId="' + me.cart + '";var extId="' + chrome.runtime.id + '";$(document).bind("MenuDishesChanged QuantityChanged MealDealRemoved", ' + fn + ')';
     var script = document.createElement('script');
     script.id = 'tmpScript';
     script.appendChild(document.createTextNode(scriptContent));
@@ -86,8 +82,9 @@ function listenOnOrderConfirm(fn) {
     (document.body || document.head || document.documentElement).appendChild(script);
     $("#tmpScript").remove();
 }
-function onChange() {
-    chrome.runtime.sendMessage(extId, {fn: 'updatePeers', event: 'update'});
+
+function onChange() { //runs in scope of web-page , sends message to background.js
+    chrome.runtime.sendMessage(extId, {fn: 'updatePeers', event: 'update', cart: cartId});
 }
 
 //function onConfirm() {
@@ -111,14 +108,14 @@ function main() {
         };
         getCartId(function (cart) {
             me.cart = cart;
-    injectMenu();
-    refreshUsers(actions.updateUsers);
+            injectMenu();
+            refreshUsers(actions.updateUsers);
             listenOnChanges(onChange);
             //listenOnOrderConfirm(onConfirm);
         });
     } else {
         callback('no user');
-}
+    }
 
 }
 

@@ -10,6 +10,8 @@ console.log('connecting to ', config.server);
 var socket = io(config.server, {secure: true});
 var users = {};
 
+var port = chrome.runtime.connect({name: "back-inject"});
+
 function sendToContentPage(data) { //todo: change to long-connection
     chrome.tabs.query({active: true}, function (tabs) {
         // send the message to the content script
@@ -93,21 +95,21 @@ var cart = {
     }
 };
 
+
+function messageHandler(request, sender, sendResponse) {
+    if (request && request.fn && cart && cart[request.fn]) {
+        cart[request.fn](request, function (err, data) {
+            return sendResponse(data);
+        });
+    }
+    return true;
+}
+
 /*
  * relays messages from web page to content-script
  */
-chrome.runtime.onMessageExternal.addListener(function (request, sender, sendResponse) {
-    sendToContentPage(request);
-}); // messages from page
+chrome.runtime.onMessageExternal.addListener(messageHandler); // messages from page
 /**
  * responds to messages send from content-page
  */
-chrome.extension.onMessage.addListener(
-    function (request, sender, sendResponse) {
-        if (request && request.fn && cart && cart[request.fn]) {
-            cart[request.fn](request, function (err, data) {
-                return sendResponse(data);
-            });
-        }
-        return true;
-    });
+chrome.extension.onMessage.addListener(messageHandler);
