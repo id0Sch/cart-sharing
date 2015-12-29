@@ -51,6 +51,13 @@ io.on('connection', function (socket) {
         var user = users[data.user.mail];
         if (user) {
             delete users[data.user.mail];
+        } else {
+            var host = _.find(users, {cart: data.user.cart});
+            if (host) {
+                var me = _.findIndex(host.peers, {mail: data.user.mail});
+                host.peers.splice(me, 1);
+                console.log(host.peers);
+            }
         }
         updateUsers();
     });
