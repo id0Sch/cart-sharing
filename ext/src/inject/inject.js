@@ -55,7 +55,7 @@ function renderUsers(users) {
     for (var key in users) {
         if (users[key].mail !== me.mail) {
             index++;
-            createElement('div', '', document.getElementsByClassName('users')[0], null, 'user' + index + ' user');
+            createElement('div', '', document.getElementsByClassName('users')[0], null, 'user' + index + ' user ' + users[key].cart);
             createElement('div', users[key].name, document.getElementsByClassName('user' + index)[0], null, 'username');
             createElement('span', 'join', document.getElementsByClassName('user' + index)[0], function () {
                 join(users[key]);
@@ -64,9 +64,23 @@ function renderUsers(users) {
     }
 
     //if my user is in users list -  means i'm in share mode
-    if(_.find(users,{mail:me.mail})){
-        disableJoin();
+    if (_.find(users, {mail: me.mail})) {
+        disableForm();
     }
+
+    else {
+        var host = _.find(users, {cart: me.cart});
+        //if my cart id is the same as other user's cart id it means i have joined this user- in this case disable share button
+        if (host) {
+            disableForm();
+            //mark joint user
+            markUser(host);
+        }
+    }
+}
+
+function markUser(user) {
+    $("." + user.cart).removeClass('host').addClass('host');
 }
 
 
@@ -160,19 +174,24 @@ function createElement(type, html, locationElement, click, className) {
 function share() {
     shareCart(function (err, data) {
         console.log(err || data);
-        disableJoin();
+        disableForm();
     });
 }
 
-function disableJoin() {
+function disableForm() {
     //disable join users
     $(".users").removeClass('disabled').addClass('disabled');
+    //disable join users
+    $(".share").removeClass('disabled').addClass('disabled');
 }
 
 function join(user) {
     //to do - validate uuid
     if (user.cart) {
         joinToCart(user.cart);
+        //disable share button
+        disableForm();
+
         //refresh the delivery ui
         if (location.pathname.indexOf("/Restaurants/Menu/Delivery/") === -1) {
             //not restaurant page

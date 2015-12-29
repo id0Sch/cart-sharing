@@ -41,6 +41,12 @@
     margin-top: 10px;
 }
 
+.content .menu .share.disabled {
+    opacity: 0.5;
+    cursor: default;
+    pointer-events: none;
+}
+
 .content .users{
     width: 100%;
     margin-top: 10px;
@@ -58,6 +64,14 @@
     justify-content: flex-start;
     position: relative;
     padding: 10px;
+}
+.content .users .user.host {
+    color: #000;
+    font-weight: bold;
+}
+
+.content .users .user.host .join{
+    display: none;
 }
 
 .content .users .user:not(:first-child) {
