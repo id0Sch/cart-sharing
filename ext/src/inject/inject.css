@@ -78,15 +78,18 @@
     white-space: nowrap;
     text-overflow: ellipsis;
     width: 80%;
+    color:#fff;
 }
 
 .content .users .user .username.me {
     cursor: pointer;
 }
 
-.content .users .user.host::before {
+.content .users .user.host::after {
     content: "";
-    background-image: url('/Content/Images/Validation/vi.png');
+    width: 40px;
+    height: 30px;
+    background-image: url('/Content/Images/RestaurantListIcon-off.png');
     background-repeat: no-repeat;
 }
 
