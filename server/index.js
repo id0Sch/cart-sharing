@@ -34,7 +34,8 @@ io.on('connection', function (socket) {
         updateUsers();
     });
 
-    socket.emit('peer-joined', function (data) {
+    socket.on('peer-joined', function (data) {
+        console.log(util.format('%s - %s', data.host.mail, data.user.mail));
         var host = users[data.host.mail];
         if (host) {
             if (!host.peers) {
