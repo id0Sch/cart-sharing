@@ -13,26 +13,37 @@ socket.on('users', function (data) {
     chrome.runtime.sendMessage({fn: 'updateUsers', users: users});
 });
 
+function getCart(callback) {
+    chrome.cookies.get({
+        url: "https://www.10bis.co.il/",
+        name: "WebApplication.Context"
+    }, function (a) {
+        if (a && a.hasOwnProperty('value')) {
+            callback(null, a.value.match(/ShoppingCartGuid=([^&]*)/)[1]);
+        } else {
+            console.error('could not retrieve cookie', a);
+            callback(null, null);
+        }
+    });
+}
 var cart = {
     refreshUsers: function (data, callback) {
         callback({users: users});
     },
+    getCartId: function (data, callback) {
+        getCart(callback);
+    },
     login: function (data, callback) {
-        chrome.cookies.get({
-            url: "https://www.10bis.co.il/",
-            name: "WebApplication.Context"
-        }, function (a) {
-            if (a && a.hasOwnProperty('value')) {
-                data.user.cart = a.value.match(/ShoppingCartGuid=([^&]*)/)[1];
-                socket.user = data.user;
-                socket.emit('peer-joined', data.user);
-                callback(null, data.user);
-            } else {
-                console.error('could not retrieve cookie', a);
-                callback(null, null);
+        getCart(function (err, cart) {
+            if (err) {
+                return callback(err, null);
             }
+
+            data.user.cart = cart;
+            socket.user = data.user;
+            socket.emit('peer-joined', data.user);
+            callback(null, socket.user);
         });
-        callback();
     },
     join: function joinCart(body, callback) {
         var guid = body.guid;
