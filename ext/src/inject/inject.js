@@ -26,6 +26,7 @@ function shareCart(callback) {
             me = user;
         callback(null, 'success');
         });
+
     }
 
 
@@ -40,6 +41,7 @@ var actions = {
         if (_.get(data, 'users')) {
             console.log("data.users",data.users);
             users = data.users;
+            console.log(users);
             renderUsers(users);
         }
     },
@@ -54,7 +56,10 @@ var actions = {
 
 function renderUsers(users) {
     var index = 0;
-    createElement('div', '', document.getElementsByClassName('menu')[0], null, 'users');
+    //empty users
+    var elem = document.getElementsByClassName("users")[0];
+    elem.innerHTML = '';
+
     for (var key in users) {
         index++;
         createElement('div', '', document.getElementsByClassName('users')[0], null, 'user' + index + ' user');
@@ -121,6 +126,7 @@ function injectMenu() {
     createElement('div', '', document.body, null, 'content');
     createElement('div', '', document.getElementsByClassName('content')[0], null, 'menu');
     createElement('div', 'x', document.getElementsByClassName('menu')[0], closeMenu, 'close');
+    createElement('div', '', document.getElementsByClassName('menu')[0], null, 'users');
     createElement('button', 'share', document.getElementsByClassName('menu')[0], share, 'share');
     createElement('div', 'Cart sharing menu', document.getElementsByClassName('content')[0], openMenu, 'handle');
 
