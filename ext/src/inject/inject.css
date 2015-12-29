@@ -1,3 +1,46 @@
-/**
- * Place your custom CSS styles here.
- **/
+
+.content .handle {
+    position: fixed;
+    left: 0;
+    top: 160px;
+    color: #fff;
+    background-color: #C5242A;
+    transition: left 200ms;
+    cursor: pointer;
+    width: 160px;
+    padding: 15px 0;
+    text-align: center;
+}
+
+.content .menu {
+    position: fixed;
+    left: -200px;
+    display: flex;
+    flex-direction: column;
+    background-color: #C5242A;
+    top: 160px;
+    transition: left 200ms;
+    transition-delay: 200ms;
+    padding: 10px;
+}
+
+.content .menu .share {
+    margin-bottom: 10px;
+}
+
+.content .menu button {
+    border: 1px solid #980000;
+    color: #CE272D;
+    font-weight: bold;
+    background-color: #EDEDED;
+    height: 32px;
+    min-width: 140px;
+    text-align: center;
+}
+
+.content .close {
+    color: #fff;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}

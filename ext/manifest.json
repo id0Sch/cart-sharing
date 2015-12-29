@@ -27,14 +27,6 @@
   "content_scripts": [
     {
       "matches": [
-        "https://*/*"
-      ],
-      "css": [
-        "src/inject/inject.css"
-      ]
-    },
-    {
-      "matches": [
         "https://www.10bis.co.il/*"
       ],
       "js": [
@@ -42,7 +34,14 @@
         "js/firebase.js",
         "js/dataChannel.js",
         "src/inject/inject.js"
+      ],
+      "css":
+      [
+        "src/inject/inject.css"
       ]
     }
   ]
+, "web_accessible_resources": [
+  "src/inject/inject.css"
+]
 }

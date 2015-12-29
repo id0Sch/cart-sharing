@@ -1,6 +1,6 @@
 var cart;
 function getCartId(callback) {
-    chrome.extension.sendMessage({fn: 'get'}, callback);
+    chrome.extension.sendMessage({fn: 'getCartId'}, callback);
 }
 function setCartId(cart, callback) {
     chrome.extension.sendMessage({fn: 'join', guid: cart}, callback);
@@ -37,22 +37,6 @@ var actions = {
     }
 };
 
-function add(type, text, location, click) {
-    //Create an input type dynamically.
-    var element = document.createElement("input");
-    //Assign different attributes to the element.
-    element.type = 'button';
-    element.value = text;
-    element.name = type;
-    element.onclick = click;
-    element.style = {
-        width: '100%'
-    };
-
-    var foo = document.getElementById(location);
-    //Append the element in page (in span).
-    foo.appendChild(element);
-}
 
 function main() {
     var rawData = $('.HeaderTexture[data-login-user-email]').data();
@@ -69,18 +53,64 @@ function main() {
     }
 
     refreshUsers(actions.updateUsers);
-    //add('button', 'change cart', 'AddressUpperBarTr', function () {
-    //    setCartId('b096eefb-bde7-42da-836e-afc4a6daf48c', function (cart) {
-    //        console.log('got new cart', cart);
-    //        $(document).trigger("MenuDishesChanged");
-    //    });
-    //});
-    //getCartId(function (cart) {
-    //    add('input', cart, 'AddressUpperBarTr', function () {
-    //        getCartId(function (cart) {
-    //        });
-    //    });
-    //});
+    injectMenu();
+}
+
+function injectMenu() {
+    createElement('div', '', document.body, null, 'content');
+    createElement('div', '', document.getElementsByClassName('content')[0], null, 'menu');
+    createElement('div', 'x', document.getElementsByClassName('menu')[0], closeMenu, 'close');
+    createElement('button', 'share', document.getElementsByClassName('menu')[0], share, 'share');
+    createElement('button', 'join', document.getElementsByClassName('menu')[0], join, 'join');
+    createElement('div', 'Cart sharing menu', document.getElementsByClassName('content')[0], openMenu, 'handle');
+
+
+}
+
+function createElement(type, html, locationElement, click, className) {
+    //Create an input type dynamically.
+    var element = document.createElement(type);
+    //Assign different attributes to the element.
+    element.type = 'button';
+    element.innerHTML = html;
+    element.onclick = click;
+    element.className = className;
+    element.style = {
+        width: '100%'
+    };
+
+    //Append the element in page (in span).
+    locationElement.appendChild(element);
+}
+
+function share() {
+    getCartId(function (cartId) {
+        const input = document.createElement('input');
+        input.style.position = 'fixed';
+        input.style.opacity = 0;
+        input.value = cartId;
+        document.body.appendChild(input);
+        input.select();
+        document.execCommand('Copy');
+    });
+    alert("cart id was copied to clipboard");
+}
+
+
+function join() {
+    var cartId = window.prompt("sometext", "defaultText");
+}
+
+function openMenu() {
+    $(".content .handle").css('left', $(".content .handle").width() * -1 + 'px');
+    $(".content .menu").css('left', 0);
+}
+
+function closeMenu() {
+    $(".content .menu").css('left', $(".content .menu").width() * -1 + 'px');
+    setTimeout(function () {
+        $(".content .handle").css('left', 0);
+    }, 200);
 }
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
