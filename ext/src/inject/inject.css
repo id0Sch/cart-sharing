@@ -41,6 +41,18 @@
     margin-top: 10px;
 }
 
+.content .menu .reset {
+    margin-bottom: 10px;
+    border: 1px solid #980000;
+    color: #CE272D;
+    font-weight: bold;
+    background-color: #EDEDED;
+    height: 32px;
+    width: 160px;
+    padding: 0;
+    margin-top: 10px;
+}
+
 .content .users{
     width: 100%;
     margin-top: 10px;

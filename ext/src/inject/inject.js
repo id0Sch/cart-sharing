@@ -28,7 +28,9 @@ function shareCart(callback) {
     });
 
 }
-
+function reset(callback) {
+    sendMsg({fn: 'reset', user: me});
+}
 
 // updates cart
 var actions = {
@@ -57,7 +59,7 @@ function renderUsers(users) {
     elem.innerHTML = '';
 
     for (var key in users) {
-        if(users[key].mail !== me.mail){
+        if (users[key].mail !== me.mail) {
             index++;
             createElement('div', '', document.getElementsByClassName('users')[0], null, 'user' + index + ' user');
             createElement('div', users[key].name, document.getElementsByClassName('user' + index)[0], null, 'username');
@@ -135,6 +137,7 @@ function injectMenu() {
     createElement('div', 'x', document.getElementsByClassName('menu')[0], closeMenu, 'close');
     createElement('div', '', document.getElementsByClassName('menu')[0], null, 'users');
     createElement('button', 'share', document.getElementsByClassName('menu')[0], share, 'share');
+    createElement('button', 'reset', document.getElementsByClassName('menu')[0], reset, 'reset');
     createElement('div', 'Cart sharing menu', document.getElementsByClassName('content')[0], openMenu, 'handle');
 
 
