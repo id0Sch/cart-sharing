@@ -26,6 +26,7 @@ var users = {};
 var io = require('socket.io')(server, {secure: true});
 io.on('connection', function (socket) {
     function updateUsers() {
+        socket.broadcast.emit('users', users);
         socket.emit('users', users);
     }
 

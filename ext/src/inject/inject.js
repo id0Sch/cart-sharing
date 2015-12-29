@@ -1,9 +1,14 @@
-var cart;
+var cart, users, me;
+
 function getCartId(callback) {
     chrome.extension.sendMessage({fn: 'get'}, callback);
 }
-function setCartId(cart, callback) {
-    chrome.extension.sendMessage({fn: 'join', guid: cart}, callback);
+function joinToCart(cart) {
+    cart = "b5224d58-31c5-40ad-ae13-0e4d3b2da2ee";
+    chrome.extension.sendMessage({fn: 'join', guid: cart}, function () {
+        console.log('got new cart', cart);
+        triggerEvent('MenuDishesChanged');
+    });
 }
 function getFriendsList() {
     return $.map($('select[data-mealdeal-assigned-users-select="true"].MealDealAssignedUser')[0].options, function (option) {
@@ -23,14 +28,28 @@ function initSocket(user, callback) {
 function refreshUsers(callback) {
     chrome.extension.sendMessage({fn: 'refreshUsers'}, callback);
 }
+function shareCart() {
+    var rawData = $('.HeaderTexture[data-login-user-email]').data();
+    if (rawData) {
+        me = {
+            name: rawData.loginUserName,
+            mail: rawData.loginUserEmail
+        };
+        initSocket(me, function (user) {
+            me = user;
+        });
+    } else {
+        console.log('no user');
+    }
+    //chrome.extension.sendMessage({fn: 'shareCart', user: user});
+}
 //function getActiveFriends(friends, callback) {
 //
 //}
-var users, me;
+
 // updates cart
 var actions = {
     updateUsers: function (data) {
-        console.log(data);
         if (_.get(data, 'users')) {
             users = data.users;
             console.log(data.users);
@@ -55,20 +74,18 @@ function add(type, text, location, click) {
     foo.appendChild(element);
 }
 
-function main() {
-    var rawData = $('.HeaderTexture[data-login-user-email]').data();
-    if (rawData) {
-        me = {
-            name: rawData.loginUserName,
-            mail: rawData.loginUserEmail
-        };
-        initSocket(me, function (user) { //optional callback
-            me = user;
-        });
-    } else {
-        console.log('no user');
-    }
+function triggerEvent(name) {
+    var scriptContent = "$(document).trigger('" + name + "');";
+    var script = document.createElement('script');
+    script.id = 'tmpScript';
+    script.appendChild(document.createTextNode(scriptContent));
+    (document.body || document.head || document.documentElement).appendChild(script);
+    $("#tmpScript").remove();
+}
 
+function main() {
+    add('button', 'share cart', 'AddressUpperBarTr', shareCart);
+    add('button', 'join cart', 'AddressUpperBarTr', joinToCart);
     refreshUsers(actions.updateUsers);
 }
 
