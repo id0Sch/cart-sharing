@@ -2,7 +2,7 @@
 # Cart sharing
 Allows you to simply share your 10bis orders with others nearby
 requires extension + express server
-
+this was created in a one-day hackathon and the code reflects that fact :)
 ## Installation
 
 server: `npm install -g 10cartsharing`
@@ -20,9 +20,11 @@ extension: configure the server using the options page, should have url to your 
 4. Push to the branch: `git push origin my-new-feature`
 5. Submit a pull request :D
 
-## Todo
+## Todo 
 * remove traces
 * handle order confirmation - should notify all and remove user from list
+* prettify code and best practices
+* chrome notifications
 * ga
 * server-less (?)
 * localization
