@@ -1,19 +1,17 @@
 <content>
 # Cart sharing
 Allows you to simply share your 10bis orders with others nearby
-## Installation
 requires extension + express server
-extension can be found here: https://chrome.google.com/webstore/detail/10bis-cart-sharing/bhiegjkgahobnemndmeenikhbkibjnij?hl=en-US&gl=IL&authuser=1
+
+## Installation
+
+server: `npm install -g 10cartsharing`
+
+extension: https://chrome.google.com/webstore/detail/10bis-cart-sharing/bhiegjkgahobnemndmeenikhbkibjnij?hl=en-US&gl=IL&authuser=1
 ## Usage
-server:
-
-install the package `npm install -g 10cartsharing`
-
 run server: `cart-server`
 
-extension:
-
-configure the server using the options page, should have url to your server, i.e : http://localhost:3000
+extension: configure the server using the options page, should have url to your server, i.e : http://localhost:3000
 
 ## Contributing
 1. Fork it!
