@@ -1,7 +1,8 @@
 <content>
 # Cart sharing
 Allows you to simply share your 10bis orders with others nearby
-requires extension + express server
+requires extension + express server.
+
 this was created in a one-day hackathon and the code reflects that fact :)
 ## Installation
 
