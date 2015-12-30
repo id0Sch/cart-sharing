@@ -23,7 +23,12 @@ configure the server using the options page, should have url to your server, i.e
 4. Push to the branch: `git push origin my-new-feature`
 5. Submit a pull request :D
 
-
+## Todo
+* remove traces
+* handle order confirmation - should notify all and remove user from list
+* ga
+* server-less (?)
+* localization
 ## License
 MIT
 </content>
