@@ -8,6 +8,7 @@ var app = express();
 var server = require('http').Server(app);
 var _ = require('lodash');
 
+var users = {};
 server.listen(3001, function () {
     console.log('server up and running');
 });
@@ -17,7 +18,10 @@ app.get('/', function (req, res) {
     return res.end('<h1>Hello, Secure World!</h1>');
 });
 
-var users = {};
+app.get('/users', function (req, res) {
+    res.header('Content-type', 'application/json');
+    return res.send(users);
+});
 
 var io = require('socket.io')(server);
 
