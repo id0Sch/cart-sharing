@@ -8,9 +8,9 @@ extension can be found here: https://chrome.google.com/webstore/detail/10bis-car
 ## Usage
 server:
 
-install dependencies `npm install`
+install the pacakge `npm install -g 10cartsharing`
 
-run server: `node server`
+run server: `cart-server`
 
 extension:
 
