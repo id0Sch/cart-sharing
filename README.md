@@ -1,4 +1,3 @@
-
 <content>
 # Cart sharing
 Allows you to simply share your 10bis orders with others nearby
