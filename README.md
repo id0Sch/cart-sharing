@@ -29,6 +29,7 @@ configure the server using the options page, should have url to your server, i.e
 * ga
 * server-less (?)
 * localization
+
 ## License
 MIT
 </content>
