@@ -1,13 +1,17 @@
 {
   "name": "10cartsharing",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "bin": {
-    "cart-server": "index.js"
+    "cart-server": "./bin/run.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/id0Sch/cart-sharing"
   },
   "author": "Ido Schachter <ido.schachter@gmail.com>",
   "license": "ISC",
