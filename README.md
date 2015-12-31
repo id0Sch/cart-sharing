@@ -3,7 +3,11 @@
 Allows you to simply share your 10bis orders with others nearby
 requires extension + express server.
 
-this was created in a one-day hackathon and the code reflects that fact :)
+## constraints
+1. this was created in a one-day hackathon and the code reflects that fact :)
+2. the creator of the cart should be the one to actually order.
+3. the creator of the cart should have order permissions for all peers that join the order
+
 ## Installation
 
 server: `npm install -g 10cartsharing`
