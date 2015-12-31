@@ -18,18 +18,12 @@ run server: `cart-server`
 
 extension: configure the server using the options page, should have url to your server, i.e : http://localhost:3000
 
-## Contributing
-1. Fork it!
-2. Create your feature branch: `git checkout -b my-new-feature`
-3. Commit your changes: `git commit -am 'Add some feature'`
-4. Push to the branch: `git push origin my-new-feature`
-5. Submit a pull request :D
-
 ## Todo 
 * remove traces
-* handle order confirmation - should notify all and remove user from list
-* prettify code and best practices
-* chrome notifications
+* use chrome ports for continues messaging
+* handle order confirmation - should notify all and remove user from list (clear cookies to all joined users)
+* prettify code and use best practices
+* chrome desktop notifications
 * ga
 * server-less (?)
 * localization
